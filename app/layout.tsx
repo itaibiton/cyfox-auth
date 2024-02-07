@@ -19,6 +19,9 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<head>
+				<title>Auth system</title>
+			</head>
 			<body className={inter.className}>
 				<ThemeProvider
 					attribute="class"
