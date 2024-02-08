@@ -19,9 +19,18 @@ import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 
 // Define the schema for email and password validation
-const formSchema = z.object({
+const credentialsFormSchema = z.object({
 	email: z.string().email("Please fill valid email"), // Validates email format
 	password: z.string().min(1, "Password fill in your password"), // Minimum 8 characters
+});
+
+// Define the schema for otp validation
+
+const otpFormSchema = z.object({
+	otp: z
+		.string()
+		.length(6, "OTP must be exactly 6 digits")
+		.regex(/^\d{6}$/, "OTP must be a 6 digit number"),
 });
 
 type UserCredentials = {
@@ -76,8 +85,8 @@ type AuthForm = {
 };
 
 const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<z.infer<typeof credentialsFormSchema>>({
+		resolver: zodResolver(credentialsFormSchema),
 		mode: "all",
 		defaultValues: {
 			email: "",
@@ -87,7 +96,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 
 	const [loading, setLoading] = useState(false);
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
 		console.log(values);
 		setLoading(true);
 		// Handle login logic here
@@ -148,7 +157,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit">
+					<Button type="submit" disabled={loading}>
 						{loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Login"}
 					</Button>
 				</form>
@@ -165,6 +174,71 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	);
 };
 
+// Assuming AuthForm is defined elsewhere and correctly
 const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
-	return <div>OTP Form</div>;
+	const form = useForm<z.infer<typeof otpFormSchema>>({
+		resolver: zodResolver(otpFormSchema),
+		mode: "all",
+		defaultValues: {
+			otp: "",
+		},
+	});
+
+	const [loading, setLoading] = useState(false);
+
+	function onSubmit(values: z.infer<typeof otpFormSchema>) {
+		console.log(values);
+		setLoading(true);
+		// Handle OTP logic here
+		setTimeout(() => {
+			setLoading(false);
+		}, 2000);
+	}
+
+	return (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col w-full gap-4"
+			>
+				<FormField
+					name="otp" // This prop is crucial for react-hook-form to register and manage this field
+					control={form.control}
+					render={({ field, fieldState }) => (
+						<FormItem>
+							<FormLabel
+								className={`${
+									fieldState?.error?.message ? "text-red-500" : ""
+								}`}
+							>
+								{fieldState?.error?.message ?? "OTP"}
+							</FormLabel>
+							<FormControl>
+								<Input
+									type="text" // Changed from 'number' to 'text' to use maxLength
+									maxLength={6} // This ensures the input does not exceed 6 characters
+									placeholder="Your OTP"
+									{...field}
+									onInput={(e) => {
+										// Prevents entering non-digit characters
+										e.currentTarget.value = e.currentTarget.value
+											.replace(/[^0-9]/g, "")
+											.slice(0, 6);
+									}}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+
+				<Button type="submit" disabled={loading}>
+					{loading ? (
+						<Loader2 className="w-5 h-5 animate-spin" />
+					) : (
+						"Verify OTP"
+					)}
+				</Button>
+			</form>
+		</Form>
+	);
 };
