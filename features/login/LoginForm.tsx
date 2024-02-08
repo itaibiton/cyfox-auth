@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Facebook, Github, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
+import Link from "next/link";
 
 // Define the schema for email and password validation
 const credentialsFormSchema = z.object({
@@ -162,7 +163,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					</Button>
 				</form>
 			</Form>
-			<div className="flex justify-evenly py-4">
+			<div className="flex justify-evenly py-4 mb-4">
 				<div className="">
 					<Facebook />
 				</div>
@@ -170,6 +171,12 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					<Github />
 				</div>
 			</div>
+			<p className="text-sm text-center">
+				New here?{" "}
+				<Link className="underline  text-primary" href="/register">
+					Sign up
+				</Link>
+			</p>
 		</div>
 	);
 };
