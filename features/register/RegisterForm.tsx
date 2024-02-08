@@ -40,7 +40,7 @@ type UserCredentials = {
 	isOTP: boolean;
 };
 
-export function LoginForm() {
+export function RegisterForm() {
 	const [userCredentials, setUserCredentials] = useState<UserCredentials>({
 		email: "",
 		password: "",
@@ -58,9 +58,9 @@ export function LoginForm() {
 					className="h-14 scale-110 block lg:hidden"
 				/>
 				<div className="flex flex-col gap-2">
-					<p className="text-xl font-medium">Login to Cyfox</p>
+					<p className="text-xl font-medium">Register to Cyfox</p>
 					<p className="text-muted-foreground">
-						Enter your credentials below to sign in
+						Enter your credentials below to sign up
 					</p>
 				</div>
 				<Separator />
@@ -100,7 +100,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
 		console.log(values);
 		setLoading(true);
-		// Handle login logic here
+		// Handle register logic here
 		setTimeout(() => {
 			setLoading(false);
 			setUserCredentials((prev) => ({
@@ -159,12 +159,16 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 						)}
 					/>
 					<Button type="submit" disabled={loading}>
-						{loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Login"}
+						{loading ? (
+							<Loader2 className="w-5 h-5 animate-spin" />
+						) : (
+							"Register"
+						)}
 					</Button>
 				</form>
 			</Form>
 			<div className="flex flex-col items-center py-4 gap-4 mb-4">
-				<p>Or sign in using</p>
+				<p>Or sign up using</p>
 				<div className="flex justify-center gap-4 w-full px-4">
 					<div className="">
 						<Facebook />
@@ -175,9 +179,9 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 				</div>
 			</div>
 			<p className="text-sm text-center">
-				New here?{" "}
-				<Link className="underline  text-primary" href="/register">
-					Sign up
+				Been here before?{" "}
+				<Link className="underline  text-primary" href="/login">
+					Login
 				</Link>
 			</p>
 		</div>

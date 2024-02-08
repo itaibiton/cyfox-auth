@@ -7,8 +7,8 @@ type Props = {
 
 function layout({ children }: Props) {
 	return (
-		<div className="w-full min-h-screen bg-background flex ">
-			<div className="w-full p-8 xl:p-20 bg-card hidden md:flex flex-col justify-between">
+		<div className="w-full min-h-screen bg-background flex">
+			<div className="w-full p-8 lg:p-20 bg-card hidden lg:flex flex-col justify-between">
 				<Image
 					src="./cyfox.svg"
 					alt="logo"
