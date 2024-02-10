@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
 import speakeasy from 'speakeasy';
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request, res: Response) {
     if (req.method === 'POST') {
         try {
             // Parsing the JSON body from the request
@@ -20,7 +20,12 @@ export async function POST(req: Request, res: NextApiResponse) {
             if (!docSnap.exists()) {
                 console.log('no exists', userId);
                 // Correctly handle the case where the user document does not exist
-                return res.status(404).json({ success: false, error: "User not found." });
+                return new Response(JSON.stringify({ success: false, error: "User not found." }), {
+                    status: 404,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
             }
 
             const secret = docSnap.data().otpSecret;
@@ -39,15 +44,30 @@ export async function POST(req: Request, res: NextApiResponse) {
                 await updateDoc(userDocRef, {
                     enabled: true,
                 });
-                return res.status(200).json({ success: true, message: "OTP verification successful." });
+                return new Response(JSON.stringify({ success: true, message: "OTP verification successful." }), {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
             } else {
                 // OTP verification failed
                 console.log('no verifired!');
-                return res.status(400).json({ success: false, error: "OTP verification failed." });
+                return new Response(JSON.stringify({ success: false, error: "OTP verification failed." }), {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
             }
         } catch (error) {
             console.error('Error during OTP verification:', error);
-            return res.status(500).json({ success: false, error: "Internal server error." });
+            return new Response(JSON.stringify({ success: false, error: "Internal server error." }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
         }
     } else {
         // return res.setHeader('Allow', ['POST']);
