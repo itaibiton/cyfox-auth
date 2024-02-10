@@ -70,8 +70,13 @@ export async function POST(req: Request, res: Response) {
             });
         }
     } else {
+        return new Response(JSON.stringify({ success: false, error: "Internal server error." }), {
+            status: 500,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         // return res.setHeader('Allow', ['POST']);
         // return res.status(405).end('Method Not Allowed');
     }
-    return "hello";
 }

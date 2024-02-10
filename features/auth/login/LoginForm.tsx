@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getFirestore, getDoc } from "firebase/firestore";
 
 import {
 	Form,
@@ -16,10 +17,14 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Facebook, Github, Loader2 } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "@/components/ui/use-toast";
+import { auth } from "@/utils/firebaseClient";
 
 // Define the schema for email and password validation
 const credentialsFormSchema = z.object({
@@ -37,6 +42,7 @@ const otpFormSchema = z.object({
 
 type UserCredentials = {
 	email: string;
+	uid: string;
 	password: string;
 	isOTP: boolean;
 };
@@ -44,6 +50,7 @@ type UserCredentials = {
 export function LoginForm() {
 	const [userCredentials, setUserCredentials] = useState<UserCredentials>({
 		email: "",
+		uid: "",
 		password: "",
 		isOTP: false,
 	});
@@ -99,7 +106,54 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	const [loading, setLoading] = useState(false);
 
 	async function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
-		console.log(values);
+		setLoading(true);
+		// const auth = getAuth();
+		try {
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				values.email,
+				values.password
+			);
+			console.log("Authentication successful, user:", userCredential.user);
+
+			// Optionally, check additional user data in Firestore
+			const db = getFirestore();
+			const userDocRef = doc(db, "users", userCredential.user.uid);
+			const docSnap = await getDoc(userDocRef);
+
+			if (docSnap.exists()) {
+				console.log("User data:", docSnap.data());
+				// Update userCredentials state, navigate, or perform additional actions
+				setUserCredentials({
+					...userCredentials,
+					isOTP: true,
+					email: values.email,
+					uid: userCredential.user.uid,
+					// Include any other user data you need in your state
+				});
+				// Here you can check for additional conditions or user roles if needed
+			} else {
+				console.log("No additional user data found in Firestore");
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: "Wrong credentials provided",
+				});
+			}
+
+			// Redirect or update UI
+			// e.g., router.push('/dashboard');
+		} catch (error) {
+			console.error("Authentication failed:", error);
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Internal server error",
+			});
+			// Handle errors, such as displaying a message to the user
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -157,12 +211,13 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 			<div className="flex flex-col items-center py-4 gap-4 mb-4">
 				<p>Or sign in using</p>
 				<div className="flex justify-center gap-4 w-full px-4">
-					<div className="bg-white border rounded w-full flex items-center justify-center py-2 shadow">
-						<Facebook />
-					</div>
-					<div className="bg-white border rounded w-full flex items-center justify-center py-2 shadow">
+					<button
+						type="button"
+						onClick={() => signIn("github")}
+						className="bg-white border rounded w-full flex items-center justify-center py-2 shadow"
+					>
 						<Github />
-					</div>
+					</button>
 				</div>
 			</div>
 			<p className="text-sm text-center">
@@ -190,24 +245,48 @@ const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	const onSubmit = async (values: z.infer<typeof otpFormSchema>) => {
 		setLoading(true);
 
-		// Use signIn from Next-Auth, specifying 'credentials' as the provider
-		const result = await signIn("credentials", {
-			redirect: false, // Set to true if you want to redirect the user to another page upon success
-			email: userCredentials.email,
-			password: userCredentials.password,
-		});
+		try {
+			const requestBody = {
+				userId: userCredentials.uid,
+				token: values.otp,
+			};
+			console.log("Sending request with body:", requestBody);
 
-		if (result?.error) {
-			// Handle error - e.g., show an error message
-			console.error("Login error:", result.error);
-			// Optionally, update component state to display the error message
-		} else {
-			// Login successful
-			console.log("Login success");
-			// Optionally, redirect the user or update UI state to indicate success
+			const res = await fetch("/api/verifyOTP", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(requestBody),
+			});
+			if (res?.ok) {
+				toast({
+					title: "Success",
+					description: "User registered succesfully",
+				});
+				console.log("now should go to next auth");
+				signIn("credentials", {
+					redirect: "/dashboard", // Set to true if you want to redirect the user after sign-in
+					email: userCredentials.email,
+					uid: userCredentials.uid,
+				});
+			} else {
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: "Wrong credentials provided",
+				});
+				setLoading(false);
+			}
+		} catch (error) {
+			console.error("Failed to verify OTP:", error);
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Internal server error",
+			});
+			setLoading(false);
 		}
-
-		setLoading(false);
 	};
 
 	return (

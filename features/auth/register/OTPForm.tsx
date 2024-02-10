@@ -14,11 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import QRCode from "react-qr-code";
 import z from "zod";
-import speakeasy from "speakeasy";
 import axios from "axios";
-
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 // Define the schema for otp validation
 
 const otpFormSchema = z.object({
@@ -38,6 +37,8 @@ export const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 
 	const [loading, setLoading] = useState(false);
 
+	const router = useRouter();
+
 	const onSubmit = async (values: z.infer<typeof otpFormSchema>) => {
 		setLoading(true);
 
@@ -55,9 +56,29 @@ export const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 				},
 				body: JSON.stringify(requestBody),
 			});
+			if (res?.ok) {
+				toast({
+					title: "Success",
+					description: "User registered succesfully",
+				});
+				setTimeout(() => {
+					router.push("/login");
+				}, 1500);
+			} else {
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: "Wrong credentials provided",
+				});
+				setLoading(false);
+			}
 		} catch (error) {
 			console.error("Failed to verify OTP:", error);
-		} finally {
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Internal server error",
+			});
 			setLoading(false);
 		}
 	};

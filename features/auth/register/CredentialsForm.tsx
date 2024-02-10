@@ -21,6 +21,7 @@ import z from "zod";
 import speakeasy from "speakeasy";
 import { doc, setDoc } from "firebase/firestore";
 import QRCode from "qrcode";
+import { toast } from "@/components/ui/use-toast";
 
 // Define the schema for email and password validation
 const credentialsFormSchema = z.object({
@@ -96,11 +97,22 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					uid: userCredential.user.uid,
 					isOTP: true,
 				}));
+			} else {
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: "Internal server error",
+				});
 			}
 
 			// Now you can handle navigation or UI update to show the QR code or further instructions
 		} catch (error) {
 			console.error("Registration failed:", error);
+			toast({
+				variant: "destructive",
+				title: "Error",
+				description: "Internal server error",
+			});
 			// Handle any errors that occurred during registration, OTP generation, or Firestore document creation
 		} finally {
 			setLoading(false);
@@ -163,18 +175,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					</Button>
 				</form>
 			</Form>
-			<div className="flex flex-col items-center py-4 gap-4 mb-4">
-				<p>Or sign up using</p>
-				<div className="flex justify-center gap-4 w-full px-4">
-					<div className="">
-						<Facebook />
-					</div>
-					<div className="">
-						<Github />
-					</div>
-				</div>
-			</div>
-			<p className="text-sm text-center">
+			<p className="text-sm text-center my-4">
 				Been here before?{" "}
 				<Link className="underline  text-primary" href="/login">
 					Login

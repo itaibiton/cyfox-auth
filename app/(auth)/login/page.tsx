@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { LoginForm } from "@/features/auth/login/LoginForm";
+import Image from "next/image";
 import React from "react";
 function page() {
 	return (
