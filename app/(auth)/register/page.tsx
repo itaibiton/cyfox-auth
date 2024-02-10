@@ -1,5 +1,4 @@
-import { RegisterForm } from "@/features/register/RegisterForm";
-import Link from "next/link";
+import { RegisterForm } from "@/features/auth/register/RegisterForm";
 import React from "react";
 function page() {
 	return (

@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
+
 import {
 	Form,
 	FormControl,
@@ -26,7 +28,6 @@ const credentialsFormSchema = z.object({
 });
 
 // Define the schema for otp validation
-
 const otpFormSchema = z.object({
 	otp: z
 		.string()
@@ -97,18 +98,8 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 
 	const [loading, setLoading] = useState(false);
 
-	function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
+	async function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
 		console.log(values);
-		setLoading(true);
-		// Handle login logic here
-		setTimeout(() => {
-			setLoading(false);
-			setUserCredentials((prev) => ({
-				email: values.email,
-				password: values.password,
-				isOTP: true,
-			}));
-		}, 2000);
 	}
 
 	return (
@@ -166,10 +157,10 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 			<div className="flex flex-col items-center py-4 gap-4 mb-4">
 				<p>Or sign in using</p>
 				<div className="flex justify-center gap-4 w-full px-4">
-					<div className="">
+					<div className="bg-white border rounded w-full flex items-center justify-center py-2 shadow">
 						<Facebook />
 					</div>
-					<div className="">
+					<div className="bg-white border rounded w-full flex items-center justify-center py-2 shadow">
 						<Github />
 					</div>
 				</div>
@@ -196,14 +187,28 @@ const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 
 	const [loading, setLoading] = useState(false);
 
-	function onSubmit(values: z.infer<typeof otpFormSchema>) {
-		console.log(values);
+	const onSubmit = async (values: z.infer<typeof otpFormSchema>) => {
 		setLoading(true);
-		// Handle OTP logic here
-		setTimeout(() => {
-			setLoading(false);
-		}, 2000);
-	}
+
+		// Use signIn from Next-Auth, specifying 'credentials' as the provider
+		const result = await signIn("credentials", {
+			redirect: false, // Set to true if you want to redirect the user to another page upon success
+			email: userCredentials.email,
+			password: userCredentials.password,
+		});
+
+		if (result?.error) {
+			// Handle error - e.g., show an error message
+			console.error("Login error:", result.error);
+			// Optionally, update component state to display the error message
+		} else {
+			// Login successful
+			console.log("Login success");
+			// Optionally, redirect the user or update UI state to indicate success
+		}
+
+		setLoading(false);
+	};
 
 	return (
 		<Form {...form}>
