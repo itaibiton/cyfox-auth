@@ -214,7 +214,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					<button
 						type="button"
 						onClick={() => signIn("github")}
-						className="bg-white border rounded w-full flex items-center justify-center py-2 shadow"
+						className="border rounded w-full flex items-center justify-center py-2 shadow"
 					>
 						<Github />
 					</button>
@@ -260,13 +260,8 @@ const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 				body: JSON.stringify(requestBody),
 			});
 			if (res?.ok) {
-				toast({
-					title: "Success",
-					description: "User registered succesfully",
-				});
-				console.log("now should go to next auth");
 				signIn("credentials", {
-					redirect: "/dashboard", // Set to true if you want to redirect the user after sign-in
+					redirect: true, // Set to true if you want to redirect the user after sign-in
 					email: userCredentials.email,
 					uid: userCredentials.uid,
 				});

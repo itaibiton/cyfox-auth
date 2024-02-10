@@ -32,10 +32,10 @@ export default async function RootLayout({
 				<SessionProvider session={session}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 						{children}
-						<div className="absolute right-2 bottom-2">
+						<Toaster />
+						<div className="absolute right-2 top-2">
 							<ModeToggle />
 						</div>
-						<Toaster />
 					</ThemeProvider>
 				</SessionProvider>
 			</body>

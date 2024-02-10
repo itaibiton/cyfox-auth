@@ -6,8 +6,7 @@ type Props = {
 
 function layout({ children }: Props) {
 	return (
-		<div className="bg-green-500 flex flex-col w-screen min-h-screen">
-			Protected layout
+		<div className="bg-background flex flex-col w-screen min-h-screen">
 			{children}
 		</div>
 	);

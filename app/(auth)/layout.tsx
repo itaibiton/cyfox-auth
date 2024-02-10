@@ -21,7 +21,9 @@ function layout({ children }: Props) {
 					Utilize machine learning to automatically detect cyber-attacks.
 				</p>
 			</div>
-			<div className="w-full flex justify-center">{children}</div>
+			<div className="w-full flex justify-center bg-card lg:bg-background">
+				{children}
+			</div>
 		</div>
 	);
 }

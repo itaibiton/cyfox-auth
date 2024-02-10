@@ -15,7 +15,7 @@ export const authOptions = {
                 email: { label: "Email", type: "text" },
                 uid: { label: "UID", type: "text" },
             },
-            async authorize(credentials) {
+            async authorize(credentials: any) {
                 // Here, you should validate the credentials (e.g., check if the UID and email match a user in your database)
                 console.log('here', credentials);
                 const user = { id: credentials?.uid, email: credentials?.email };
