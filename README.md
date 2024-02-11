@@ -52,10 +52,6 @@ Cyfox Authentication System is a comprehensive authentication solution built wit
 
 To configure social login providers or adjust Firebase settings, modify the `.env.local` file with your specific credentials. For detailed configuration options, refer to the Firebase and NextAuth documentation.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
 ## Acknowledgments
 
 - Next.js Team for the awesome framework.
