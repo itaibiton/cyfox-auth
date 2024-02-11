@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Eye, EyeIcon, EyeOff, Facebook, Github, Loader2 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import speakeasy from "speakeasy";
