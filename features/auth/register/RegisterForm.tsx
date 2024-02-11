@@ -20,7 +20,7 @@ export function RegisterForm() {
 	});
 
 	return (
-		<div className="flex flex-col w-full gap-4 rounded max-w-sm h-full py-52">
+		<div className="flex flex-col w-full gap-4 rounded max-w-sm h-full justify-center">
 			<div className="flex flex-col  w-full gap-4">
 				<Image
 					src="./cyfox.svg"
