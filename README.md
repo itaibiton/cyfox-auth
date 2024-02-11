@@ -2,7 +2,7 @@
 
 ## Overview
 
-Cyfox Authentication System is a comprehensive authentication solution built with Next.js, Firebase, and NextAuth. It supports traditional email and password registration/login, multifactor authentication (MFA) with OTP (One-Time Password), and social login via GitHub and Facebook. This system is designed to provide a secure and user-friendly authentication experience, leveraging Firebase for backend services and NextAuth for session management.
+Cyfox Authentication System is a comprehensive authentication solution built with Next.js, Firebase, and NextAuth. It supports traditional email and password registration/login, multifactor authentication (MFA) with OTP (One-Time Password), and social login via GitHub.This system is designed to provide a secure and user-friendly authentication experience, leveraging Firebase for backend services and NextAuth for session management.
 
 ## Features
 
@@ -17,7 +17,7 @@ Cyfox Authentication System is a comprehensive authentication solution built wit
 
 - Node.js (v14 or later recommended)
 - Firebase project and credentials
-- GitHub and Facebook developer accounts for OAuth setup
+- GitHub developer accounts for OAuth setup
 - Environment variables configured for Firebase and social providers
 
 ## Installation
