@@ -8,7 +8,7 @@ type Props = {
 function layout({ children }: Props) {
 	return (
 		<div className="w-full min-h-screen bg-background flex">
-			<div className="w-full p-8 lg:p-20 bg-card hidden lg:flex flex-col justify-between">
+			<div className="w-full p-8 lg:p-20 bg-card hidden lg:flex flex-col justify-between min-h-full">
 				<Image
 					src="./cyfox.svg"
 					alt="logo"
@@ -21,7 +21,7 @@ function layout({ children }: Props) {
 					Utilize machine learning to automatically detect cyber-attacks.
 				</p>
 			</div>
-			<div className="w-full flex justify-center bg-card lg:bg-background">
+			<div className="w-full flex justify-center bg-card lg:bg-background min-h-full">
 				{children}
 			</div>
 		</div>

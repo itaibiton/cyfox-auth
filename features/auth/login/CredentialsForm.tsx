@@ -18,7 +18,7 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Github, Loader2 } from "lucide-react";
+import { EyeIcon, EyeOff, Github, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
@@ -39,6 +39,8 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	});
 
 	const [loading, setLoading] = useState(false);
+
+	const [showPassword, setShowPassword] = useState(false);
 
 	async function onSubmit(values: z.infer<typeof credentialsFormSchema>) {
 		setLoading(true);
@@ -83,7 +85,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 			toast({
 				variant: "destructive",
 				title: "Error",
-				description: "Internal server error",
+				description: "Wrong credentials provided",
 			});
 			// Handle errors, such as displaying a message to the user
 		} finally {
@@ -129,11 +131,26 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 									{fieldState?.error?.message ?? "Password"}
 								</FormLabel>
 								<FormControl>
-									<Input
-										type="password"
-										placeholder="Your password"
-										{...field}
-									/>
+									<div className="relative">
+										<Input
+											type={showPassword ? "text" : "password"}
+											placeholder="Confirm password"
+											{...field}
+										/>
+										<Button
+											type="button"
+											className="absolute right-0 top-1"
+											size="sm"
+											variant="ghost"
+											onClick={() => setShowPassword((prev) => !prev)}
+										>
+											{showPassword ? (
+												<EyeIcon width={16} height={16} />
+											) : (
+												<EyeOff width={16} height={16} />
+											)}
+										</Button>
+									</div>
 								</FormControl>
 							</FormItem>
 						)}
@@ -143,8 +160,8 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 					</Button>
 				</form>
 			</Form>
-			<div className="flex flex-col items-center py-4 gap-4 mb-4">
-				<p>Or sign in using</p>
+			<div className="flex flex-col items-center py-4 gap-2 mb-4">
+				<p className="text-sm">Or sign in using</p>
 				<div className="flex justify-center gap-4 w-full px-4">
 					<button
 						type="button"

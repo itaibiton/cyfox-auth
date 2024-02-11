@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 function page() {
 	return (
-		<div className="w-full p-20 flex justify-center">
+		<div className="w-full p-20 flex justify-center min-h-full">
 			<LoginForm />
 		</div>
 	);
