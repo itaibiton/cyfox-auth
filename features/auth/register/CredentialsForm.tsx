@@ -9,11 +9,11 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthForm } from "@/features/auth/types";
+import { AuthForm } from "@/features/auth/register/types";
 import { auth, db } from "@/utils/firebaseClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Facebook, Github, Loader2 } from "lucide-react";
+import { Eye, EyeIcon, EyeOff, Facebook, Github, Loader2 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,10 +24,20 @@ import QRCode from "qrcode";
 import { toast } from "@/components/ui/use-toast";
 
 // Define the schema for email and password validation
-const credentialsFormSchema = z.object({
-	email: z.string().email("Please fill valid email"), // Validates email format
-	password: z.string().min(1, "Password fill in your password"), // Minimum 8 characters
-});
+const credentialsFormSchema = z
+	.object({
+		email: z.string().email("Please fill valid email"), // Validates email format
+		password: z
+			.string()
+			.min(6, "Password must be at least 6 characters long")
+			.regex(/[A-Z]/, "Password must include at least one capital letter")
+			.regex(/\d/, "Password must include at least one number"),
+		passwordConfirm: z.string(),
+	})
+	.refine((data) => data.password === data.passwordConfirm, {
+		message: "Passwords must match",
+		path: ["passwordConfirm"], // This specifies that the error should be attached to the passwordConfirm field
+	});
 
 const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 	const form = useForm<z.infer<typeof credentialsFormSchema>>({
@@ -36,10 +46,13 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 		defaultValues: {
 			email: "",
 			password: "",
+			passwordConfirm: "",
 		},
 	});
 
 	const [loading, setLoading] = useState(false);
+
+	const [showPassword, setShowPassword] = useState(false);
 
 	const generateOTPSecret = async (userId: string, userEmail: string) => {
 		const secret = speakeasy.generateSecret({
@@ -157,15 +170,71 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 									{fieldState?.error?.message ?? "Password"}
 								</FormLabel>
 								<FormControl>
-									<Input
-										type="password"
-										placeholder="Your password"
-										{...field}
-									/>
+									<div className="relative">
+										<Input
+											type={showPassword ? "text" : "password"}
+											placeholder="Your password"
+											{...field}
+										/>
+										<Button
+											type="button"
+											className="absolute right-0 top-1"
+											size="sm"
+											variant="ghost"
+											onClick={() => setShowPassword((prev) => !prev)}
+										>
+											{showPassword ? (
+												<EyeIcon width={16} height={16} />
+											) : (
+												<EyeOff width={16} height={16} />
+											)}
+										</Button>
+									</div>
 								</FormControl>
 							</FormItem>
 						)}
 					/>
+					<FormField
+						control={form.control}
+						name="passwordConfirm"
+						render={({ field, fieldState }) => (
+							<FormItem>
+								<FormLabel
+									className={`${
+										fieldState?.error?.message ? "text-red-500" : ""
+									}`}
+								>
+									{fieldState?.error?.message ?? "Password"}
+								</FormLabel>
+								<FormControl>
+									<div className="relative">
+										<Input
+											type={showPassword ? "text" : "password"}
+											placeholder="Confirm password"
+											{...field}
+										/>
+										<Button
+											type="button"
+											className="absolute right-0 top-1"
+											size="sm"
+											variant="ghost"
+											onClick={() => setShowPassword((prev) => !prev)}
+										>
+											{showPassword ? (
+												<EyeIcon width={16} height={16} />
+											) : (
+												<EyeOff width={16} height={16} />
+											)}
+										</Button>
+									</div>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					<small className="text-card-foreground text-xs">
+						Password must be at least 6 characters long, include one uppercase
+						letter and one number.
+					</small>
 					<Button type="submit" disabled={loading}>
 						{loading ? (
 							<Loader2 className="w-5 h-5 animate-spin" />

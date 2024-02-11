@@ -9,7 +9,7 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthForm } from "@/features/auth/types";
+import { AuthForm } from "@/features/auth/register/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";

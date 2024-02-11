@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
-import { UserCredentials } from "@/features/auth/types";
+import { UserCredentials } from "@/features/auth/register/types";
 import CredentialsForm from "@/features/auth/register/CredentialsForm";
 import { OTPForm } from "@/features/auth/register/OTPForm";
 
