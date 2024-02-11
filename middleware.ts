@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    if (token && (pathname.includes('login') || pathname.includes('register'))) {
+    if (token && (pathname.includes('login') || pathname.includes('register') || pathname === '/')) {
         const url = req.nextUrl.clone();
         url.pathname = '/dashboard';
         return NextResponse.redirect(url);

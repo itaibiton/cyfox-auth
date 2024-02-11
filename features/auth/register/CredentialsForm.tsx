@@ -114,7 +114,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 				toast({
 					variant: "destructive",
 					title: "Error",
-					description: "Internal server error",
+					description: "Please make sure this email is not registered",
 				});
 			}
 
@@ -124,7 +124,7 @@ const CredentialsForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 			toast({
 				variant: "destructive",
 				title: "Error",
-				description: "Internal server error",
+				description: "Please make sure this email is not registered",
 			});
 			// Handle any errors that occurred during registration, OTP generation, or Firestore document creation
 		} finally {
