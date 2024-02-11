@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cyfox Authentication System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Cyfox Authentication System is a comprehensive authentication solution built with Next.js, Firebase, and NextAuth. It supports traditional email and password registration/login, multifactor authentication (MFA) with OTP (One-Time Password), and social login via GitHub and Facebook. This system is designed to provide a secure and user-friendly authentication experience, leveraging Firebase for backend services and NextAuth for session management.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Email and password authentication.
+- MFA with OTP, supporting authenticator apps.
+- Social login with GitHub and Facebook.
+- Secure session management with NextAuth.
+- User-friendly password reset flow.
+- Customizable and responsive UI.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Node.js (v14 or later recommended)
+- Firebase project and credentials
+- GitHub and Facebook developer accounts for OAuth setup
+- Environment variables configured for Firebase and social providers
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/cyfox-auth-system.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd cyfox-auth-system
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Set up your environment variables by renaming `.env.local.example` to `.env.local` and filling in your Firebase and social login credentials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   Visit `http://localhost:3000` in your browser to see the application.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Usage
 
-## Deploy on Vercel
+- **Registration**: New users can register using their email and password or through GitHub and Facebook. MFA setup is encouraged for email and password registrations.
+- **Login**: Users can log in using their chosen method during registration. Email and password users will be prompted for an OTP if MFA is enabled.
+- **Password Reset**: Users registered with email and password can initiate a password reset from the settings page.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+To configure social login providers or adjust Firebase settings, modify the `.env.local` file with your specific credentials. For detailed configuration options, refer to the Firebase and NextAuth documentation.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- Next.js Team for the awesome framework.
+- Firebase for providing a powerful backend service.
+- NextAuth for simplifying Next.js authentication.
