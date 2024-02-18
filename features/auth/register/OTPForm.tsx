@@ -130,11 +130,15 @@ export const OTPForm = ({ userCredentials, setUserCredentials }: AuthForm) => {
 								</FormItem>
 							)}
 						/>
+						<Button type="submit" disabled={loading}>
+							{loading ? (
+								<Loader2 className="w-5 h-5 animate-spin" />
+							) : (
+								"Setup OTP"
+							)}
+						</Button>
 					</form>
 				</Form>
-				<Button type="submit" disabled={loading}>
-					{loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Setup OTP"}
-				</Button>
 			</div>
 		</>
 	);
